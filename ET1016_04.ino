@@ -65,7 +65,6 @@ void displayTemperature(int8_t temperature)
 	digitalWrite(LED_RED, HIGH);
 	digitalWrite(LED_GREEN, LOW);
 	digitalWrite(LED_BLUE, LOW);
-	}
 		else 
 		{
 			if(temperature >= 24 && temperature <=26)
@@ -78,21 +77,25 @@ void displayTemperature(int8_t temperature)
 			{
 				if(temperature > 26)
 				{
-					digitalWrite(LED_RED, HIGH);
+					digitalWrite(LED_RED, LOW);
 					digitalWrite(LED_GREEN, LOW);
-					digitalWrite(LED_BLUE, LOW);
+					digitalWrite(LED_BLUE, HIGH);
 				}
 			}
 		}
 
 	if (digitalRead(BUTTONK1) == 0) // check if button K1 is pressed (logic 0 when pressed)
 	{
+		delay(100);
 		Serial.println("Button K1 is pressed");
-		buz.playTone(1500, 100);
+		buz.playTone(1500, 1000);
+		while (digitalRead(BUTTONK1) == 0);/*Ensure the button is released (i.e. back to logic 1) before executing the next statement */
 	}
 	if (digitalRead(BUTTONK2) == 0) // check if button K2 is pressed (logic 0 when pressed)
 	{
+		delay(100);
 		Serial.println("Button K2 is pressed");
-		buz.playTone(800, 150);
+		buz.playTone(800, 300);
+		while (digitalRead(BUTTONK1) == 0);/*Ensure the button is released (i.e. back to logic 1) before executing the next statement */
 	}
 }
