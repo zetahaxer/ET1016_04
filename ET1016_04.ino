@@ -53,7 +53,7 @@ void displayTemperature(int8_t temperature)
 {
 	int tempwhole = int(temperature);                  // Get integer part
   int tempdecimal = int((temperature - tempwhole) * 10); // Get first decimal digit
-	disp.point(1);
+
   int8_t temp[4];
 	temp[0] = temperature / 10;
 	temp[1] = temperature % 10;
