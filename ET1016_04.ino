@@ -42,84 +42,88 @@ void loop()
   float celsius;
   celsius = temper.getTemperature();//get temperature
   displayTemperature((int8_t)celsius);//
-  delay(300);//delay 300ms
+  delay(100);//delay 100ms
 }
 /************************************************* *********************/
 /* Function: Display temperature on 4-digit digital tube */
 /* Parameter: -int8_t temperature, temperature range is -40 ~ 125 degrees celsius */
 /* Return Value: void */
 
+float L = 27.0, M = 28.0, H = 30.0;
+
 void displayTemperature(int8_t temperature)
 {
 	int tempwhole = int(temperature);                  // Get integer part
   int tempdecimal = int((temperature - tempwhole) * 10); // Get first decimal digit
-
-  int8_t temp[4];
-	temp[0] = temperature / 10;
-	temp[1] = temperature % 10;
-	temp[2] = (tempdecimal);
-	temp[3] = 12;	          //index of 'C' for celsius degree symbol.
+  int8_t temp[4] = {0,1,2,3};
+	 temp[0] = temperature / 10;
+   disp.DecPoint = 1;
+	 temp[1] = temperature % 10;
+	 temp[2] = tempdecimal;
+	 temp[3] = 12;	          //index of 'C' for celsius degree symbol.
 	disp.display(temp);
 
-	float L = 24.0, M = 25.0, H = 26.0;
-
-	if (digitalRead(BUTTONK1) == 0) // check if button K1 is pressed (logic 0 when pressed)
-	{
-		delay(300);
-		Serial.println("Button K1 is pressed");
-		buz.playTone(1500, 300);
-		L += 0.5;
-		M += 0.5;
-		H += 0.5;
-		while (digitalRead(BUTTONK1) == 0);/*Ensure the button is released (i.e. back to logic 1) before executing the next statement */
-	}
-	if (digitalRead(BUTTONK2) == 0) // check if button K2 is pressed (logic 0 when pressed)
-	{
-		delay(300);
-		Serial.println("Button K2 is pressed");
-		buz.playTone(800, 300);
-		L += 0.5;
-		M += 0.5;
-		H += 0.5;
-		while (digitalRead(BUTTONK1) == 0);/*Ensure the button is released (i.e. back to logic 1) before executing the next statement */
-	}
-
-
-	while (digitalRead(BUTTONK1) == 0 || (BUTTONK2) == 0)
-	{
-		int8_t tempset [4];
-		tempset[0] = INDEX_BLANK;
-		tempset[1] = INDEX_BLANK;
-		tempset[2] = M / 10;
-		tempset[3] = ((int)M) % 10;
-		disp.display(tempset);
-		delay(2000);
-		while (digitalRead(BUTTONK1) == 0 || (BUTTONK2) == 0);/*Ensure the button is released (i.e. back to logic 1) before executing the next statement */
-	}
-
-
-		if(temperature < L)
+	if(temperature < L)
 	{
 	digitalWrite(LED_RED, HIGH);
 	digitalWrite(LED_GREEN, LOW);
 	digitalWrite(LED_BLUE, LOW);
 	}
-		else 
+	else 
+	{
+		if(temperature == M)
 		{
-			if(temperature = M)
+		digitalWrite(LED_RED, LOW);
+		digitalWrite(LED_GREEN, HIGH);
+		digitalWrite(LED_BLUE, LOW);
+		}
+		else
+		{
+			if(temperature > H)
 			{
-			digitalWrite(LED_RED, LOW);
-			digitalWrite(LED_GREEN, HIGH);
-			digitalWrite(LED_BLUE, LOW);
-			}
-			else
-			{
-				if(temperature > H)
-				{
-					digitalWrite(LED_RED, LOW);
-					digitalWrite(LED_GREEN, LOW);
-					digitalWrite(LED_BLUE, HIGH);
-				}
+				digitalWrite(LED_RED, LOW);
+				digitalWrite(LED_GREEN, LOW);
+				digitalWrite(LED_BLUE, HIGH);
 			}
 		}
+	}
+
+
+	if (digitalRead(BUTTONK1) == 0) // check if button K1 is pressed (logic 0 when pressed)
+	{
+		delay(0);
+		Serial.println("Button K1 is pressed");
+		buz.playTone(1500, 300);
+		L -= 0.5;
+		M -= 0.5;
+		H -= 0.5;
+		changedisp(tempdecimal);
+		while (digitalRead(BUTTONK1) == 0);/*Ensure the button is released (i.e. back to logic 1) before executing the next statement */
+	}
+	if (digitalRead(BUTTONK2) == 0) // check if button K2 is pressed (logic 0 when pressed)
+	{
+		delay(0);
+		Serial.println("Button K2 is pressed");
+		buz.playTone(800, 300);
+		L += 0.5;
+		M += 0.5;
+		H += 0.5;
+		changedisp(tempdecimal);
+		while (digitalRead(BUTTONK2) == 0);/*Ensure the button is released (i.e. back to logic 1) before executing the next statement */
+	}
+}
+
+
+double changedisp(int tempdecimal)
+	{
+		disp.clearDisplay();
+		int8_t tempset [4];
+		tempset[0] = M / 10;
+		disp.DecPoint = 1;
+		tempset[1] = ((int)M) % 10;
+		tempset[2] = (tempdecimal);
+		tempset[3] = INDEX_BLANK;
+		disp.display(tempset);
+		delay(1000);
+		return 0;
 	}
