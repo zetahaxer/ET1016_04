@@ -39,9 +39,11 @@ void setup()
 
 void loop()
 {
-  float celsius;
-  celsius = temper.getTemperature();//get temperature
-  displayTemperature((int8_t)celsius);//
+  float celsius = temper.getTemperature();//get temperature
+	float rounded = round(celsius * 2.0) / 2.0;
+	int whole = (int)rounded;
+	int half = (int)((rounded - whole) * 10);  // will be 0 or 5  
+	displayTemperature((int8_t)whole, half); //
   delay(100);//delay 100ms
 }
 /************************************************* *********************/
@@ -51,15 +53,14 @@ void loop()
 
 float L = 27.0, M = 28.0, H = 30.0;
 
-void displayTemperature(int8_t temperature)
+void displayTemperature(int8_t temperature, int half)
 {
 	int tempwhole = int(temperature);                  // Get integer part
-  int tempdecimal = int((temperature - tempwhole) * 10); // Get first decimal digit
   int8_t temp[4] = {0,1,2,3};
 	 temp[0] = temperature / 10;
    disp.DecPoint = 1;
 	 temp[1] = temperature % 10;
-	 temp[2] = tempdecimal;
+	 temp[2] = half;
 	 temp[3] = 12;	          //index of 'C' for celsius degree symbol.
 	disp.display(temp);
 
@@ -97,7 +98,7 @@ void displayTemperature(int8_t temperature)
 		L -= 0.5;
 		M -= 0.5;
 		H -= 0.5;
-		changedisp(tempdecimal);
+		changedisp(M);
 		while (digitalRead(BUTTONK1) == 0);/*Ensure the button is released (i.e. back to logic 1) before executing the next statement */
 	}
 	if (digitalRead(BUTTONK2) == 0) // check if button K2 is pressed (logic 0 when pressed)
@@ -108,22 +109,25 @@ void displayTemperature(int8_t temperature)
 		L += 0.5;
 		M += 0.5;
 		H += 0.5;
-		changedisp(tempdecimal);
+		changedisp(M);
 		while (digitalRead(BUTTONK2) == 0);/*Ensure the button is released (i.e. back to logic 1) before executing the next statement */
 	}
 }
 
 
-double changedisp(int tempdecimal)
+double changedisp(double M)
 	{
 		disp.clearDisplay();
+		float Mrounded = round(M * 2.0) / 2.0;
+		int Mwhole = int(M);
+		int Mhalf = (int)((Mrounded - Mwhole) * 10);
 		int8_t tempset [4];
 		tempset[0] = M / 10;
 		disp.DecPoint = 1;
 		tempset[1] = ((int)M) % 10;
-		tempset[2] = (tempdecimal);
+		tempset[2] = (Mhalf);
 		tempset[3] = INDEX_BLANK;
 		disp.display(tempset);
-		delay(1000);
+		delay(300);
 		return 0;
 	}
