@@ -34,7 +34,7 @@ void setup()
 	pinMode(LED_BLUE,OUTPUT);
 	pinMode(BUTTONK1,INPUT_PULLUP); // sets pin8 as input with INPUT_PULLUP mode.
 	pinMode(BUTTONK2,INPUT_PULLUP); // sets pin9 as input with INPUT_PULLUP mode.
-	Serial.begin(9600);
+	
 }
 
 char systemStart = 0;
@@ -97,7 +97,6 @@ void displayTemperature(int8_t temperature, int half)
 	if (digitalRead(BUTTONK1) == 0) // check if button K1 is pressed (logic 0 when pressed)
 	{
 		delay(0);
-		Serial.println("Button K1 is pressed");
 		buz.playTone(1500, 300);
 		M -= 0.5;
 		changedisp(M);
@@ -106,7 +105,6 @@ void displayTemperature(int8_t temperature, int half)
 	if (digitalRead(BUTTONK2) == 0) // check if button K2 is pressed (logic 0 when pressed)
 	{
 		delay(0);
-		Serial.println("Button K2 is pressed");
 		buz.playTone(800, 300);
 		M += 0.5;
 		changedisp(M);
