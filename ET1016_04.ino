@@ -34,7 +34,6 @@ void setup()
 	pinMode(LED_BLUE,OUTPUT);
 	pinMode(BUTTONK1,INPUT_PULLUP); // sets pin8 as input with INPUT_PULLUP mode.
 	pinMode(BUTTONK2,INPUT_PULLUP); // sets pin9 as input with INPUT_PULLUP mode.
-	
 }
 
 char systemStart = 0;
@@ -69,9 +68,9 @@ void loop()
   while (digitalRead(BUTTONK1) == 0 || digitalRead(BUTTONK2) == 0); // wait release
 	if (!systemStart) return 0;
 }
-  float celsius = temper.getTemperature();//get temperature
-	float rounded = round(celsius * 2.0) / 2.0;
-	int whole = (int)rounded;
+  float celsius = temper.getTemperature(); //get temperature
+	float rounded = round(celsius * 2.0) / 2.0; 
+	int whole = (int)rounded; //
 	int half = (int)((rounded - whole) * 10);  // will be 0 or 5  
 	displayTemperature((int8_t)whole, half); //
   delay(100);//delay 100ms
