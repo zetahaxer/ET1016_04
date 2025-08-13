@@ -74,9 +74,9 @@ void loop()
 }
   float celsius = temper.getTemperature(); //get temperature
 	float rounded = round(celsius * 2.0) / 2.0; 
-	int whole = (int)rounded; //
+	int whole = (int)rounded; 
 	int half = (int)((rounded - whole) * 10);  // will be 0 or 5  
-	displayTemperature((int8_t)whole, half); //
+	displayTemperature((int8_t)whole, half); 
   delay(100);//delay 100ms
 
 	int fanspeed = 0001;
