@@ -92,7 +92,7 @@ void loop()
 
 	if (fanspeed != prevdisp){
 		disp.display(fanspeed);
-		delay(1400);
+		delay(1200);
 		prevdisp = fanspeed;
 	}
 	else
