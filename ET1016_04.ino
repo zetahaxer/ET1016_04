@@ -119,7 +119,6 @@ void displayTemperature(int8_t temperature, int half)
 
 	if (digitalRead(BUTTONK1) == 0) // check if button K1 is pressed (logic 0 when pressed)
 	{
-		delay(0);
 		buz.playTone(1500, 300);
 		M -= 0.5;
 		changedisp(M);
@@ -127,7 +126,6 @@ void displayTemperature(int8_t temperature, int half)
 	}
 	if (digitalRead(BUTTONK2) == 0) // check if button K2 is pressed (logic 0 when pressed)
 	{
-		delay(0);
 		buz.playTone(800, 300);
 		M += 0.5;
 		changedisp(M);
