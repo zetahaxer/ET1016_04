@@ -36,7 +36,7 @@ void setup()
 	pinMode(BUTTONK2,INPUT_PULLUP); // sets pin9 as input with INPUT_PULLUP mode.
 }
 
-char systemStart = 0;
+int systemStart = 0;
 
 void loop()
 {
