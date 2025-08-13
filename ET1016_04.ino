@@ -10,6 +10,7 @@
 #include "RichShieldNTC.h"
 #include "RichShieldPassiveBuzzer.h"
 
+#define KNOB_PIN A0 // Pin where the potentiometer is connected
 #define PassiveBuzzerPin 3 //the signal pin of the module is connected with pin 3 of OPEN-SMART UNO R3
 #define LED_RED 4 //The red Led is connected to Digital Pin 4 of Arduino Uno
 #define LED_GREEN 5 //The green Led is connected to Digital Pin 5 of Arduino Uno
@@ -37,6 +38,9 @@ void setup()
 }
 
 int systemStart = 0;
+float M = 28.0;
+int knobValue;
+int prevdisp = 0;
 
 void loop()
 {
@@ -74,13 +78,32 @@ void loop()
 	int half = (int)((rounded - whole) * 10);  // will be 0 or 5  
 	displayTemperature((int8_t)whole, half); //
   delay(100);//delay 100ms
+
+	int fanspeed = 0001;
+	knobValue=analogRead(KNOB_PIN); //read value of the knob and assign it to the variable
+
+	if (knobValue < 300)
+			fanspeed = 0001;
+		else 
+		if (knobValue <= 600)
+			fanspeed = 0002;
+		else
+			fanspeed = 0003;
+
+	if (fanspeed != prevdisp){
+		disp.display(fanspeed);
+		delay(1400);
+		prevdisp = fanspeed;
+	}
+	else
+	{
+		return 0;
+	}
 }
 /************************************************* *********************/
 /* Function: Display temperature on 4-digit digital tube */
 /* Parameter: -int8_t temperature, temperature range is -40 ~ 125 degrees celsius */
 /* Return Value: void */
-
-float M = 28.0;
 
 void displayTemperature(int8_t temperature, int half)
 {
@@ -95,6 +118,7 @@ void displayTemperature(int8_t temperature, int half)
 
 	if (digitalRead(BUTTONK1) == 0) // check if button K1 is pressed (logic 0 when pressed)
 	{
+		delay(0);
 		buz.playTone(1500, 300);
 		M -= 0.5;
 		changedisp(M);
@@ -102,6 +126,7 @@ void displayTemperature(int8_t temperature, int half)
 	}
 	if (digitalRead(BUTTONK2) == 0) // check if button K2 is pressed (logic 0 when pressed)
 	{
+		delay(0);
 		buz.playTone(800, 300);
 		M += 0.5;
 		changedisp(M);
@@ -134,21 +159,21 @@ void displayTemperature(int8_t temperature, int half)
 
 
 double changedisp(double M)
-	{
-		disp.clearDisplay();
-		float Mrounded = round(M * 2.0) / 2.0;
-		int Mwhole = int(M);
-		int Mhalf = (int)((Mrounded - Mwhole) * 10);
-		int8_t tempset [4];
-		tempset[0] = M / 10;
-		disp.DecPoint = 1;
-		tempset[1] = ((int)M) % 10;
-		tempset[2] = (Mhalf);
-		tempset[3] = INDEX_BLANK;
-		disp.display(tempset);
-		delay(300);
-		return 0;
-	}
+{
+	disp.clearDisplay();
+	float Mrounded = round(M * 2.0) / 2.0;
+	int Mwhole = int(M);
+	int Mhalf = (int)((Mrounded - Mwhole) * 10);
+	int8_t tempset [4];
+	tempset[0] = M / 10;
+	disp.DecPoint = 1;
+	tempset[1] = ((int)M) % 10;
+	tempset[2] = (Mhalf);
+	tempset[3] = INDEX_BLANK;
+	disp.display(tempset);
+	delay(300);
+	return 0;
+}
 
 	void playStartupMelody() 
 {
